@@ -1,0 +1,80 @@
+
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+--
+-- Database: `faq`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `faqplus`
+--
+
+CREATE TABLE IF NOT EXISTS `faqplus` (
+  `cont_id` int(3) NOT NULL AUTO_INCREMENT,
+  `cat_id` int(3) NOT NULL,
+  `title` varchar(250) NOT NULL,
+  `dtl` text NOT NULL,
+  UNIQUE KEY `cont_id` (`cont_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=24 ;
+
+--
+-- Dumping data for table `faqplus`
+--
+
+INSERT INTO `faqplus` (`cont_id`, `cat_id`, `title`, `dtl`) VALUES
+(2, 1, 'White Hat SEO', 'Search engine Optimization tech-nicks  which uses legitimate method and focus on improved user experience for better ranking of pages to increase traffic. \r\n\r\nThis type of page optimization focus on long term search engine ranking by providing good and useful content for the visitors. \r\nOpposite to this is black hat Optimization. '),
+(3, 4, 'DNS recrod ', 'Domain Name Server ( DNS ) record is the address of name server which has the address of the website. DNS record is big list in which IP address of hosted websites are stored. This is required when we host a website and we need to tell the world about its address or about its IP location in the language of Internet. \r\n\r\nWhen we change our [url=http://www.plus2net.com/hosting/index.php]web hosting[/url] service provider then we change the  name server record of the particular  domain. This facility is given by your domain registrar who has purchased the domain on behalf of owner. \r\n\r\nHosting provider will not have the facility to change DNS record unless the same is the domain registrar.   \r\n\r\nOnce the DNS record is updated, it will take upto 24 to 72 hours for the DNS of worldwide to reflect the new address. Till such time new and old host will share the traffic. '),
+(16, 22, 'How JavaScript is used ', 'JavaScript is a client side code.&nbsp;'),
+(17, 22, 'How to use JavaScript ', 'JavaScript usually runs by browser. The code is loaded to the browser and browser executes it.&nbsp;<div><u>JavaScript runs on Client Side</u></div>'),
+(18, 22, 'Back end control and script', 'JavaScript can''t directly control back end process. It submits data to back end script and the script in turn process the data.&nbsp;'),
+(19, 21, 'PHP Script', 'PHP Script runs at server side , so nothing is required to be installed at client end.&nbsp;'),
+(20, 21, 'PHP and  front end Design', 'We can''t&nbsp; directly manage front end design of web page by using PHP. Browsers does not understand PHP Code. We can control the front end code or html by using PHP so indirectly we can manage the design.&nbsp;'),
+(21, 21, 'PHP & MySQL', 'Bu using PHP script we can connect to MySQL database and mange the data. To handle data we can use standard PHP MySQL functions.&nbsp;'),
+(22, 23, 'What is SQL', 'Structured Query Language is a stand language to manage data of any database.&nbsp;&nbsp;'),
+(23, 23, 'Server script used for SQL', 'We use PHP or Perl or dot net to post SQL to mange database.&nbsp;');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `faqplus_admin`
+--
+
+CREATE TABLE IF NOT EXISTS `faqplus_admin` (
+  `userid` varchar(15) NOT NULL,
+  `password` varchar(256) NOT NULL,
+  UNIQUE KEY `admin_id` (`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `faqplus_admin`
+--
+
+INSERT INTO `faqplus_admin` (`userid`, `password`) VALUES
+('siteadmin', '$2a$10$jD58.XFIsvtiTlAJGTCoa.BSMd2Ktk5CaJ8um74eXg1zfLZH.4DL.');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `faqplus_cat`
+--
+
+CREATE TABLE IF NOT EXISTS `faqplus_cat` (
+  `cat_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(250) NOT NULL,
+  UNIQUE KEY `cat_id` (`cat_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=24 ;
+
+--
+-- Dumping data for table `faqplus_cat`
+--
+
+INSERT INTO `faqplus_cat` (`cat_id`, `name`) VALUES
+(1, 'Search engine Optimization'),
+(4, 'Web Hosting'),
+(21, 'PHP'),
+(22, 'JavaScript'),
+(23, 'SQL ');
