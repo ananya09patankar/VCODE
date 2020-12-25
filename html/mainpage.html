@@ -1,0 +1,551 @@
+<?php
+session_start();
+if($_SESSION['status']!="active"){
+  header("location:login.html");
+}
+$cookie_name="NewUser";
+$cookie_value=$_SESSION['username'];
+setcookie($cookie_name,$cookie_value,time()+(86400*5));
+?>
+<!DOCTYPE html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue-grey.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5 
+{font-family: "Open Sans", sans-serif}
+</style>
+<body class="w3-theme-l5" >
+<!-- Navbar -->
+<div class="w3-top">
+ <div class="w3-bar w3-theme-d2 w3-left-align w3-large">
+  <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
+  <a href="#" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><i class="fa fa-home w3-margin-right"></i>Vcode</a>
+  <div class="w3-dropdown-hover w3-hide-small">
+    <button class="w3-button w3-padding-large" title="Friend Requests" id="fr"><i class="fa fa-globe"></i></button><div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:300px">
+     <p id="friendrequests"></p>
+    </div>
+  </div>
+  <a href="#" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Account Settings" onclick="modify()"><i class="fa fa-user"></i></a>
+   <script type="text/javascript">
+  function modify(){
+    location.href="modify.html";
+  }
+  </script>
+   
+   
+  <div class="w3-dropdown-hover w3-hide-small">
+    <button class="w3-button w3-padding-large" title="My Friends"><i class="fa fa-address-book"></i></button><div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:300px">
+     <p id="myfriends"></p>
+    </div>
+  </div>
+   <div class="w3-dropdown-hover w3-hide-small">
+    <button class="w3-button w3-padding-large" title="Find Friends"><i class="fa fa-handshake-o"></i></button><div class="w3-dropdown-content w3-card-4 w3-bar-block" id="findfriend" style="width:300px">
+         </div>
+  </div>
+  <script type="text/javascript">
+    
+   $(window).ready(function(){
+    var xmlhttp =new XMLHttpRequest();
+    xmlhttp.onreadystatechange=function(){
+  if(xmlhttp.readyState==4 && xmlhttp.status==200){
+  var obj=JSON.parse(xmlhttp.responseText);
+  var i=0;
+  while(i<obj.length){
+    var att=document.createElement("p");
+    var node=document.createTextNode(obj[i]);
+    att.appendChild(node);
+    var element =document.getElementById("findfriend");
+    element.appendChild(att);
+  (function(index){
+   var btn=$('<button>Add Friend</button>').on("click",function(){
+     frequest(obj[index]);});
+    $('#findfriend').append(btn);})(i);
+   i++; 
+}
+}
+}
+  xmlhttp.open('GET','allusers.php',true);
+  xmlhttp.send();
+});
+ 
+</script>
+<script type="text/javascript">
+function frequest(a){
+$.post("friendrequest.php",{username:a},function(){
+  alert("Friend Request Sent");
+});
+document.getElementById("findfriend").innerHTML="";
+  var xmlhttp =new XMLHttpRequest();
+    xmlhttp.onreadystatechange=function(){
+  if(xmlhttp.readyState==4 && xmlhttp.status==200){
+  var obj=JSON.parse(xmlhttp.responseText);
+  var i=0;
+  while(i<obj.length){
+    var att=document.createElement("p");
+    var node=document.createTextNode(obj[i]);
+    att.appendChild(node);
+    var element =document.getElementById("findfriend");
+    element.appendChild(att);
+  (function(index){
+   var btn=$('<button>Add Friend</button>').on("click",function(){
+     frequest(obj[index]);});
+    $('#findfriend').append(btn);})(i);
+   i++; 
+}
+}
+}
+  xmlhttp.open('GET','allusers.php',true);
+  xmlhttp.send();
+}
+</script>
+
+ <div class="w3-dropdown-hover w3-hide-small">
+    <button class="w3-button w3-padding-large" title="Your courses"><i class="fa fa-book"></i><span class="w3-badge w3-right w3-small w3-green">3</span></button><div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:300px">
+      <a href="#" class="w3-bar-item w3-button" id="one" ></a>
+      <a href="#" class="w3-bar-item w3-button" id="two"></a>
+      <a href="#" class="w3-bar-item w3-button" id="three"></a>
+    </div>
+  </div>
+  <a class="w3-bar-item w3-button w3-hide-small w3-right w3-padding-large w3-hover-white" title="Sign out" onclick="signout()">
+    <img src="images/user.png" class="w3-circle" style="height:23px;width:23px" alt="User">
+  </a>
+  </div>
+</div>
+<script type="text/javascript">
+  var arr;
+$(window).ready(function friendreq(){
+  var xmlhttp =new XMLHttpRequest();
+  xmlhttp.onreadystatechange=function (){
+  if(xmlhttp.readyState==4 && xmlhttp.status==200){
+  var obj=JSON.parse(xmlhttp.responseText);
+   arr=obj.split(",");
+  if(arr.length!=0){
+  var i=0;
+  while(i<arr.length && arr[0]!=""){
+    var att=document.createElement("p");
+    var node=document.createTextNode(arr[i]);
+    att.appendChild(node);
+    var element =document.getElementById("friendrequests");
+    element.appendChild(att);
+    (function(index){
+   var btn=$('<button>Accept</button>').on("click",function(){
+
+    friends(1,index,arr);
+    });
+    $('#friendrequests').append(btn);
+    var btn2=$('<button>Decline</button>').on("click",function(){
+      friends(0,index,arr);
+    });
+    $('#friendrequests').append(btn2);})(i);
+   i++; 
+}
+}
+}
+}
+  xmlhttp.open('GET','fr2.php',true);
+  xmlhttp.send();
+  });
+</script>
+<script type="text/javascript">
+function friends(a,i,arr){
+var p=arr[i];
+$.post("friends.php",{req:a,name:p},function(){
+  if(a==0)
+alert(arr[i]+"'s Friend Request Declined");
+else
+alert(arr[i]+"'s Friend Request Accepted");
+});
+document.getElementById("friendrequests").innerHTML="";
+var xmlhttp =new XMLHttpRequest();
+  xmlhttp.onreadystatechange=function (){
+  if(xmlhttp.readyState==4 && xmlhttp.status==200){
+  var obj=JSON.parse(xmlhttp.responseText);
+   arr=obj.split(",");
+  if(arr.length!=0){
+  var i=0;
+  while(i<arr.length && arr[0]!=""){
+    var att=document.createElement("p");
+    var node=document.createTextNode(arr[i]);
+    att.appendChild(node);
+    var element =document.getElementById("friendrequests");
+    element.appendChild(att);
+    (function(index){
+   var btn=$('<button>Accept</button>').on("click",function(){
+
+    friends(1,index,arr);
+    });
+    $('#friendrequests').append(btn);
+    var btn2=$('<button>Decline</button>').on("click",function(){
+      friends(0,index,arr);
+    });
+    $('#friendrequests').append(btn2);})(i);
+   i++; 
+}
+}
+}
+}
+  xmlhttp.open('GET','fr2.php',true);
+  xmlhttp.send();
+document.getElementById("myfriends").innerHTML="";
+var xhttp =new XMLHttpRequest();
+    xhttp.onreadystatechange=function(){
+  if(xhttp.readyState==4 && xhttp.status==200){
+  var ob=JSON.parse(xhttp.responseText);
+  var ar=ob.split(",");
+  var i=0;
+  if(ar[0]!=""){
+  while(i<ar.length){
+    var att=document.createElement("p");
+    var node=document.createTextNode(ar[i]);
+    att.appendChild(node);
+    var element =document.getElementById("myfriends");
+    element.appendChild(att);
+  (function(index){
+   var btn=$('<button>Chat</button>').on("click",function(){
+  $.post("setfriends.php",{name:ar[index]});
+  location.href="chatbox.html";
+});
+    $('#myfriends').append(btn);})(i);
+   i++; 
+}
+}
+}
+}
+  xhttp.open('GET','friendlist.php',true);
+  xhttp.send();
+  document.getElementById("findfriend").innerHTML="";
+  var xlhttp =new XMLHttpRequest();
+    xlhttp.onreadystatechange=function(){
+  if(xlhttp.readyState==4 && xlhttp.status==200){
+  var obj=JSON.parse(xlhttp.responseText);
+  var i=0;
+  while(i<obj.length){
+    var att=document.createElement("p");
+    var node=document.createTextNode(obj[i]);
+    att.appendChild(node);
+    var element =document.getElementById("findfriend");
+    element.appendChild(att);
+  (function(index){
+   var btn=$('<button>Add Friend</button>').on("click",function(){
+     frequest(obj[index]);});
+    $('#findfriend').append(btn);})(i);
+   i++; 
+}
+}
+}
+  xlhttp.open('GET','allusers.php',true);
+  xlhttp.send();
+}
+
+</script>
+
+<!-- Navbar on small screens -->
+
+
+<!-- Page Container -->
+<div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">    
+  <!-- The Grid -->
+  <div class="w3-row">
+    <!-- Left Column -->
+    <div class="w3-col m3">
+      <!-- Profile -->
+      <div class="w3-card w3-round w3-white">
+        <div class="w3-container">
+         <h4 class="w3-center">My Profile</h4>
+         <p class="w3-center"><img src="images/user.png" class="w3-circle" style="height:106px;width:106px" alt="User"></p>
+         <hr>
+         <p id="user"><i class="fa fa-pencil fa-fw w3-margin-right w3-text-theme"></i><?php echo $_SESSION['username']; ?></p>
+         
+         <p  id="add"><i class="fa fa-home fa-fw w3-margin-right w3-text-theme"> </i> <?php echo $_SESSION['city'].",".$_SESSION['country']; ?></p>
+
+      </div>
+      </div>
+      <br>
+      <script type="text/javascript">
+   $(window).ready(function(){
+    var xmlhttp =new XMLHttpRequest();
+    xmlhttp.onreadystatechange=function(){
+  if(xmlhttp.readyState==4 && xmlhttp.status==200){
+  var obj=JSON.parse(xmlhttp.responseText);
+  var arr=obj.split(",");
+  var i=0;
+  if(arr[0]!=""){
+  while(i<arr.length){
+    var att=document.createElement("p");
+    var node=document.createTextNode(arr[i]);
+    att.appendChild(node);
+    var element =document.getElementById("myfriends");
+    element.appendChild(att);
+  (function(index){
+   var btn=$('<button>Chat</button>').on("click",function(){
+  $.post("setfriends.php",{name:arr[index]});
+  location.href="chatbox.html";
+});
+    $('#myfriends').append(btn);})(i);
+   i++; 
+}
+}
+}
+}
+  xmlhttp.open('GET','friendlist.php',true);
+  xmlhttp.send();
+
+});
+</script>
+   
+    
+    <!-- End Left Column -->
+    </div>
+    
+    <!-- Middle Column -->
+    <div class="w3-col m7">
+      <div class="w3-row-padding">
+        <div class="w3-col m12">
+          <div class="w3-card w3-round w3-white">
+            <div class="w3-    container w3-padding">
+             <h3 >Search For new Courses</h3> 
+             <h3 id="rough"></h3> 
+             <p contenteditable="true" class="w3-border w3-padding"></p>
+              <button type="button" class="w3-button w3-theme"><i class="fa fa-pencil"></i>Search</button> 
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+        <span class="w3-right w3-opacity">$12</span>
+        <h4>Html/Css Web Designing Course</h4><br>
+        <hr class="w3-clear">
+        <p>This course introduces students to basic web design using HTML (Hypertext Markup Language) and CSS (Cascading Style Sheets). The course does not require any prior knowledge of HTML or web design. </p>
+          <div class="w3-row-padding" style="margin:0 -16px">
+            <div class="w3-half">
+              <img src="images/html.jfif" style="width:100%" alt="Html/Css" class="w3-margin-bottom">
+            </div>
+            </div>
+        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom" id="btnone" onclick="registration('btnone')">Register</button> 
+        </div>
+        <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+        <span class="w3-right w3-opacity">$8</span>
+        <h4>JavaScript</h4><br>
+        <hr class="w3-clear">
+        <p>JavaScript span from interactive websites to the Internet of Things, making it a great choice for beginners and experienced developers looking to learn a new programming language.</p>
+          <div class="w3-row-padding" style="margin:0 -16px">
+            <div class="w3-half">
+              <img src="images/javascript.jfif" style="width:100%" alt="javascript" class="w3-margin-bottom">
+            </div>
+            </div>
+        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom" id="btntwo" onclick="registration('btntwo')">Register</button> 
+        </div>
+        <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+        <span class="w3-right w3-opacity">$10</span>
+        <h4>PHP</h4><br>
+        <hr class="w3-clear">
+        <p>Designed for intermediate users, our PHP tutorials can help you learn PHP inside and out.Our tutorials also cover hard skills needed to build web applications, like working with forms, data, and sessions.  </p>
+          <div class="w3-row-padding" style="margin:0 -16px">
+            <div class="w3-half">
+              <img src="images/php.jfif" style="width:100%" alt="php" class="w3-margin-bottom">
+            </div>
+            </div>
+        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom" id="btnthree" onclick="registration('btnthree')">Register</button> 
+        </div>
+     
+      <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+        <span class="w3-right w3-opacity">$14</span>
+        <h4> Fundamentals Of Graphic Designing</h4><br>
+        <hr class="w3-clear">
+        <p>The goal of this course is to equip learners with a set of transferable formal and conceptual tools for “making and communicating” in the field of graphic design. This core skill set will equip learners for formal studies in graphic design, and a starting point for further work in interface design, motion graphics, and editorial design.</p>
+          <div class="w3-row-padding" style="margin:0 -16px">
+            <div class="w3-half">
+              <img src="images/graphics.jfif" style="width:100%" alt="Northern Lights" class="w3-margin-bottom">
+            </div>
+            </div>
+        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"  id="btnfour" onclick="registration('btnfour')">Register</button> 
+        </div>
+      <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+        <span class="w3-right w3-opacity">$20</span>
+        <h4>Introduction to Android App development</h4><br>
+        <hr class="w3-clear">
+        <p>This course blends theory and practice to help you build great apps the right way. In this course, you'll work with instructors step-by-step to build a cloud-connected Android app, and learn best practices of mobile development, and Android development in particular.</p>
+          <div class="w3-row-padding" style="margin:0 -16px">
+            <div class="w3-half">
+              <img src="images/android.jfif" style="width:100%" alt="Designing" class="w3-margin-bottom">
+            </div>
+            </div>
+        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"  id="btnfive" onclick="registration('btnfive')">Register</button> 
+         </div>
+         <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+        <span class="w3-right w3-opacity">$29</span>
+        <h4>Advanced Image Processing</h4><br>
+        <hr class="w3-clear">
+        <p> Digital image processing deals with processing of images which are digital in nature. Study of the subject is motivated by three major applications. The first application is in improvement of pictorial information for human perception i.e. enhancing the quality of the image so that the image will have a better look. The second is for autonomous machine applications which have wider applications in industries, particularly for quality control in assembly automation and many similar applications. This course will introduce various image processing techniques, algorithms and their applications.</p>
+          <div class="w3-row-padding" style="margin:0 -16px">
+            <div class="w3-half">
+              <img src="images/imageprocessing.jfif" style="width:100%" alt="Designing" class="w3-margin-bottom">
+            </div>
+            </div>
+        <button type="button" class="w3-button w3-theme-d1 w3-margin-bottom"  id="btnsix" onclick="registration('btnsix')">Register</button> 
+         </div>
+        
+      </div>
+          
+    <!-- End Middle Column -->
+   
+    
+    <!-- Right Column -->
+    <div class="w3-col m2">
+      <div class="w3-card w3-round w3-white w3-center">
+        <div class="w3-container">
+          <p>Upcoming Courses:</p>
+          <img src="images/machine.jfif" alt="Machine Learning" style="width:100%;">
+          <p><strong>This is a course that will teach you the end-to-end process of investigating data through a machine learning lens. It will teach you how to extract and identify useful features that best represent your data, a few of the most important machine learning algorithms, and how to evaluate the performance of your machine learning algorithms.</strong></p>
+          <p>Friday 15:00</p>
+          <p><button class="w3-button w3-block w3-theme-l4">Info</button></p>
+        </div>
+      </div>
+      <br>
+      
+      
+    </div>
+
+    <!-- End Right Column -->
+    
+  
+  <!-- End Grid -->
+  </div>
+  
+<!-- End Page Container -->
+</div>
+<br>
+<script>
+var reg=0;
+function registration(id){
+reg++;
+document.getElementById('one').innerHTML="Html/CSS";
+if(reg<=3){
+
+switch(id){
+  case 'btnone':
+  <?php $_SESSION["course"]="Html/CSS";?>;
+  document.getElementById('btnone').innerHTML="Registered";
+  if(reg==1){
+  document.getElementById('one').innerHTML="Html/CSS";
+}
+else if(reg==2){
+document.getElementById('two').innerHTML="Html/CSS";
+}
+else{
+document.getElementById('three').innerHTML="Html/CSS";
+}
+  break;
+  case 'btntwo':<?php $_SESSION["course"]="JavaScript";?>;
+  document.getElementById('btntwo').innerHTML="Registered";
+  
+if(reg==1){
+  document.getElementById('one').innerHTML="JavaScript";
+}
+else if(reg==2){
+document.getElementById('two').innerHTML="JavaScript";
+}
+else{
+document.getElementById('three').innerHTML="JavaScript";
+}
+  break;
+  case 'btnthree':<?php $_SESSION["course"]="PHP";?>;
+  document.getElementById('btnthree').innerHTML="Registered";
+  if(reg==1){
+  document.getElementById('one').innerHTML="PHP";
+}
+else if(reg==2){
+document.getElementById('two').innerHTML="PHP";
+}
+else{
+document.getElementById('three').innerHTML="PHP";
+}
+  break;
+  case 'btnfour':<?php $_SESSION["course"]="Fundamentals of Graphic Designing";?>;
+  document.getElementById('btnfour').innerHTML="Registered";
+  
+  if(reg==1){
+  document.getElementById('one').innerHTML="Fundamentals of Graphic Designing";
+}
+else if(reg==2){
+document.getElementById('two').innerHTML="Fundamentals of Graphic Designing";
+}
+else{
+document.getElementById('three').innerHTML="Fundamentals of Graphic Designing";
+}
+  break;
+  case 'btnfive':<?php $_SESSION["course"]="Introduction to Android App Development";?>;
+  document.getElementById('btnfive').innerHTML="Registered";
+  if(reg==1){
+  document.getElementById('one').innerHTML="Introduction to Android App Development";
+}
+else if(reg==2){
+document.getElementById('two').innerHTML="Introduction to Android App Development";
+}
+else{
+document.getElementById('three').innerHTML="Introduction to Android App Development";
+}
+
+  break;
+  case'btnsix':<?php $_SESSION["course"]="Advanced Image Processing";?>;
+  document.getElementById('btnsix').innerHTML="Registered";
+  if(reg==1){
+  document.getElementById('one').innerHTML="Advanced Image Processing";
+}
+else if(reg==2){
+document.getElementById('two').innerHTML="Advanced Image Processing";
+}
+else{
+document.getElementById('three').innerHTML="Advanced Image Processing";
+}
+  break;
+
+}
+
+}
+else{
+  alert('You can not register more than three courses!!!');
+  }
+}
+</script>
+
+<!-- Footer -->
+<footer class="w3-container w3-theme-d3 w3-padding-16">
+  <h5> Continue learning with Vcode</h5>
+</footer>
+<?php
+echo '<script language="javascript">'. 'alert("We use cookies to ensure that we give you the best experience on our website. ")'. '</script>';?>
+ 
+<script>
+// Used to toggle the menu on smaller screens when clicking on the menu button
+function openNav() {
+    var x = document.getElementById("navDemo");
+    if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+    } else { 
+        x.className = x.className.replace(" w3-show", "");
+    }
+   
+
+  </script>
+   </body>
+   <script type="text/javascript">
+    function signout(){
+     <?php 
+      unset($_SESSION['status']);
+      ?>
+      alert('Successfully Signed Out');
+      location.href='login.html';
+    }
+  </script> 
+
+  </html> 
