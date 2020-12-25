@@ -1,0 +1,45 @@
+
+.entirepage {
+  background-image: linear-gradient(to right,#114357, #F29492);
+  background-repeat: repeat-y;
+background-size:contain;
+	width: 100%;
+  opacity:0.8;
+  position: absolute;
+	z-index:-1;
+
+  }
+ .formtotal .formpage{
+  background-color: white;
+  width:30%;
+border-radius: 25px;
+padding: 0.5%;
+margin-top: 2%;
+  margin-bottom: 2%;
+ }
+ .entirepage .formtotal .formpage .button{
+  background-color: #114357;
+  color: white;
+  border-radius: 20px;
+  padding-top: 2%;
+  padding-bottom: 2%;
+}
+input[type=text]{
+  border:2px solid #114357;
+}
+
+input[type=password]{
+  border:2px solid #114357;
+}
+  @media screen and (max-width:700px){
+   
+.formtotal .formpage{
+ 
+  width:50%;
+}
+
+
+}
+
+ 
+

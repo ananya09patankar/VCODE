@@ -1,0 +1,44 @@
+html{
+width:100%;
+height: 100%;
+position: absolute;
+z-index:-1;
+}
+ 
+ .form{
+ margin:0px auto;
+ border: 10px solid transparent;
+ padding: 2px;
+border-image: url(images/border.png) 30 round;
+ background-color: white;
+  width:30%;
+border-radius: 25px;
+padding: 0.5%;
+margin-top: 2%;
+  margin-bottom: 2%;
+ width:30%;
+ height:70%;
+ position: relative;
+  
+  }
+h3,h4{
+
+color:white;
+}
+p{ color:brown;
+font-weight: bold; }
+#text{
+  background-color:lightyellow;
+  border: 2px;
+  border-color: lightyellow;
+  padding:8px;
+  color:brown;
+ }
+button[type=Submit]{
+  background-color:yellow;
+  border: 2px #DDA0DD;
+  padding:8px;
+  color:brown;
+    }
+  }
+ 
